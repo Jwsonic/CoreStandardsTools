@@ -12086,10 +12086,9 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() ([]byte, error){
-	"data/math.xml":         data_math_xml,
+	"data/math.xml": data_math_xml,
 	"data/ela-literacy.xml": data_ela_literacy_xml,
 }
-
 // AssetDir returns the file names below a certain
 // directory embedded in the file by go-bindata.
 // For example if you run go-bindata on data/... and data contains the
@@ -12126,13 +12125,14 @@ func AssetDir(name string) ([]string, error) {
 }
 
 type _bintree_t struct {
-	Func     func() ([]byte, error)
+	Func func() ([]byte, error)
 	Children map[string]*_bintree_t
 }
-
 var _bintree = &_bintree_t{nil, map[string]*_bintree_t{
 	"data": &_bintree_t{nil, map[string]*_bintree_t{
-		"math.xml":         &_bintree_t{data_math_xml, map[string]*_bintree_t{}},
-		"ela-literacy.xml": &_bintree_t{data_ela_literacy_xml, map[string]*_bintree_t{}},
+		"math.xml": &_bintree_t{data_math_xml, map[string]*_bintree_t{
+		}},
+		"ela-literacy.xml": &_bintree_t{data_ela_literacy_xml, map[string]*_bintree_t{
+		}},
 	}},
 }}
