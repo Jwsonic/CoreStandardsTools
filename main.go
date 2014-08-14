@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	data, err := bindata.Asset("data/math.xml")
+	data, err := bindata.Asset("data/ela-literacy.xml")
 
 	if len(data) == 0 || err != nil {
 		fmt.Println("Asset not found!")
@@ -23,5 +23,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(standards.LearningStandardItems[0])
+	for _, item := range standards.LearningStandardItems {
+		if len(item.RelatedLearningStandardItems) == 0 {
+			fmt.Println("yep")
+		}
+
+	}
 }
