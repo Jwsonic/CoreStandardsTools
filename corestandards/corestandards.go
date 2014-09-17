@@ -2,6 +2,9 @@ package corestandards
 
 import (
 	"encoding/xml"
+	"strings"
+
+	"github.com/kennygrant/sanitize"
 )
 
 //XMLLearningStandardItemRefID docs go here
@@ -35,4 +38,42 @@ type XMLLearningStandardItem struct {
 type XMLLearningStandards struct {
 	XMLName               xml.Name                  `xml:"LearningStandards"`
 	LearningStandardItems []XMLLearningStandardItem `xml:"LearningStandardItem"`
+}
+
+//MinimalStandard is a cleaned up standard version for export
+type MinimalStandard struct {
+	Code   string   `json:"code"`
+	Grades []string `json:"grades"`
+	Text   string   `json:"text"`
+}
+
+//StandardType returns the standard type for the given standard
+func (item XMLLearningStandardItem) StandardType() string {
+
+	if len(item.StatementCodes) == 0 {
+		return ""
+	}
+
+	parts := strings.Split(item.StatementCodes[0], ".")
+
+	if len(parts) < 3 {
+		return ""
+	}
+
+	return parts[2]
+}
+
+//MinimalStandard returns a cleaned up standard
+func (item XMLLearningStandardItem) MinimalStandard() MinimalStandard {
+	standard := MinimalStandard{}
+
+	if len(item.StatementCodes) > 0 {
+		standard.Code = item.StatementCodes[0]
+	}
+	standard.Grades = item.GradeLevels
+	if len(item.Statements) > 0 {
+		standard.Text = sanitize.HTML(item.Statements[0])
+	}
+
+	return standard
 }

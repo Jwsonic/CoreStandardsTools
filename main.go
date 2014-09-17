@@ -1,32 +1,43 @@
 package main
 
 import (
+	"encoding/json"
 	"encoding/xml"
-	"fmt"
+	"io/ioutil"
+	"log"
+
 	"github.com/Jwsonic/CoreStandardsTools/bindata"
 	"github.com/Jwsonic/CoreStandardsTools/corestandards"
-	"os"
 )
 
 func main() {
 	data, err := bindata.Asset("data/ela-literacy.xml")
 
 	if len(data) == 0 || err != nil {
-		fmt.Println("Asset not found!")
-		os.Exit(1)
+		log.Fatal("Asset not found!")
 	}
 
 	var standards corestandards.XMLLearningStandards
 
 	if err := xml.Unmarshal(data, &standards); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
-	for _, item := range standards.LearningStandardItems {
-		if len(item.RelatedLearningStandardItems) == 0 {
-			fmt.Println("yep")
-		}
+	minimal := []corestandards.MinimalStandard{}
 
+	for _, item := range standards.LearningStandardItems {
+		minimal = append(minimal, item.MinimalStandard())
+	}
+
+	b, err := json.Marshal(map[string]interface{}{"edata": minimal})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = ioutil.WriteFile("standards.json", b, 0644)
+
+	if err != nil {
+		log.Fatal(err)
 	}
 }
